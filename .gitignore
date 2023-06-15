@@ -1,8 +1,8 @@
 *.rbc
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
+**/log/*
+**/tmp/*
+!**/log/.keep
+!**/tmp/.keep
 
-.env
-.env*.local
+**/.env
+**/.env*.local
