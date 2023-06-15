@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main class="light-bg">
       <TodoList />
     </v-main>
   </v-app>
@@ -9,3 +9,9 @@
 <script setup>
   import TodoList from '@/components/TodoList.vue'
 </script>
+
+<style scoped>
+  .light-bg {
+    background-color: #6699CC;
+  }
+</style>
