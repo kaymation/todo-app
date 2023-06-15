@@ -46,7 +46,7 @@
                     <v-col cols="md-8 sm-10">
                         <v-card v-for="item in items" :key="item.key" class="ma-2" :color="(item.done) ? 'green' : 'primary'">
                             <template v-if="editingId == item.id">
-                                    <v-card class="mt-4 pa-4">
+                                    <v-card class="mt-4 pa-4" color="primary">
                                         <v-textarea v-model="editItemBody"></v-textarea>
                                         <v-divider></v-divider>
                                         <v-card-actions>
