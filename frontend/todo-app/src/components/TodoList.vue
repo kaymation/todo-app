@@ -44,7 +44,7 @@
                 </v-row>
                 <v-row justify="center">
                     <v-col cols="md-8 sm-10">
-                        <v-card v-for="item in items" :key="item.key" class="ma-2" :color="(item.done) ? 'green' : 'primary'">
+                        <v-card v-for="item in items" :key="item.id" class="ma-2" :color="(item.done) ? 'green' : 'primary'">
                             <template v-if="editingId == item.id">
                                     <v-card class="mt-4 pa-4" color="primary">
                                         <v-textarea v-model="editItemBody"></v-textarea>
@@ -76,46 +76,44 @@
                                                     @click="openEdit(item)"></v-btn>
                                             </div>
                                             <div class="action-button">
-                                                <v-dialog
-                                                    v-model="deleteDialog"
-                                                    width="550"
-                                                    >
-                                                    <template v-slot:activator="{ props }">
-                                                        <v-btn density="compact"
+                                                <v-btn density="compact"
                                                         color="red"
                                                         icon="mdi-close"
-                                                        v-bind="props"
-                                                        ></v-btn>  
-                                                    </template>
-                                                    <v-card>
-                                                        <v-card-title class="text-h5 grey lighten-2">
-                                                        Are you sure you want to delete this item?
-                                                        </v-card-title>
-
-                                                        <v-card-text>
-                                                            This action cannot be undone
-                                                        </v-card-text>
-
-                                                        <v-divider></v-divider>
-
-                                                        <v-card-actions>
-                                                            <v-spacer></v-spacer>
-                                                            <v-btn
-                                                                color="primary"
-                                                                text
-                                                                @click="deleteItem(item.id)"
-                                                            >
-                                                                Yes, I want to delete
-                                                            </v-btn>
-                                                        </v-card-actions>
-                                                    </v-card>
-                                                </v-dialog>
+                                                        @click="showDelete(item.id)">
+                                                </v-btn>  
                                             </div>
                                         </div>
                                     </v-col>
                                 </v-row>
                             </template>
                         </v-card>
+                        <v-dialog
+                            v-model="deleteDialog"
+                            width="550"
+                            >
+                            <v-card>
+                                <v-card-title class="text-h5 grey lighten-2">
+                                Are you sure you want to delete this item?
+                                </v-card-title>
+
+                                <v-card-text>
+                                    This action cannot be undone
+                                </v-card-text>
+
+                                <v-divider></v-divider>
+
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        color="primary"
+                                        text
+                                        @click="() => deleteItem(deleteDialogId)"
+                                    >
+                                        Yes, I want to delete
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                     </v-col>
                 </v-row>
             </v-card>
@@ -144,6 +142,7 @@ export default {
             newItemText: "",
             editItemBody: "",
             deleteDialog: false,
+            deleteDialogId: null,
         }
     },
 
@@ -184,12 +183,14 @@ export default {
             const item = await createItem(newItem)
             this.newItemOpen = false
             this.items.splice(0, 0, item)
+            this.newItemText = ""
             this.loading = false
         
         },
         async deleteItem(itemId) {
             this.loading = true
             this.deleteDialog = false
+            console.log(itemId)
             await destroyItem(itemId)
             const toDeleteIndex = this.findIndexById(itemId)
             this.items.splice(toDeleteIndex, 1)
@@ -214,6 +215,10 @@ export default {
             this.editingId = null
             this.loading = false
 
+        },
+        showDelete(itemId) {
+            this.deleteDialog = true
+            this.deleteDialogId = itemId
         },
         findIndexById(id) {
             return this.items.findIndex(item => item.id === id)
